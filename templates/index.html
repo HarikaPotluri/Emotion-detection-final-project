@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NLP - Emotion Detection</title>
+    <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    >
+    <script src="{{ url_for('static', filename='mywebscript.js') }}"></script>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="text-center mb-4">NLP - Emotion Detection</h1>
+                <label for="textToAnalyze" class="form-label">
+                    Please enter the text to be analyzed
+                </label>
+                <input type="text" class="form-control" id="textToAnalyze">
+                <button
+                    type="button"
+                    onclick="runEmotionAnalysis()"
+                    class="btn btn-secondary mt-3"
+                >
+                    Run Sentiment Analysis
+                </button>
+                <h2 class="h4 mt-5">Result of Emotion Detection</h2>
+                <div id="system_response" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
