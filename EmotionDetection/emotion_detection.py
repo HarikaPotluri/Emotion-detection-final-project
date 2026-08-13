@@ -1,19 +1,20 @@
 """Emotion detection using the IBM Watson NLP embeddable service."""
 
+import json
+
 import requests
 
-WATSON_URL = (
-    "https://sn-watson-emotion.labs.skills.network/"
-    "v1/watson.runtime.nlp.v1/NlpService/EmotionPredict"
-)
-MODEL_HEADERS = {
-    "grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"
-}
 
-
-def _empty_result():
-    """Return the required response shape for invalid input."""
-    return {
+def emotion_detector(text_to_analyse):
+    """Analyze text and return emotion scores plus the dominant emotion."""
+    url = (
+        "https://sn-watson-emotion.labs.skills.network/"
+        "v1/watson.runtime.nlp.v1/NlpService/EmotionPredict"
+    )
+    header = {
+        "grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"
+    }
+    invalid_response = {
         "anger": None,
         "disgust": None,
         "fear": None,
@@ -22,31 +23,38 @@ def _empty_result():
         "dominant_emotion": None,
     }
 
+    if text_to_analyse is None or not text_to_analyse.strip():
+        return invalid_response
 
-def emotion_detector(text_to_analyze):
-    """Analyze text and return emotion scores plus the dominant emotion."""
-    if text_to_analyze is None or not text_to_analyze.strip():
-        return _empty_result()
-
-    payload = {"raw_document": {"text": text_to_analyze}}
-    response = requests.post(
-        WATSON_URL,
-        headers=MODEL_HEADERS,
-        json=payload,
-        timeout=10,
-    )
+    myobj = {"raw_document": {"text": text_to_analyse}}
+    response = requests.post(url, json=myobj, headers=header, timeout=10)
 
     if response.status_code == 400:
-        return _empty_result()
+        return invalid_response
 
-    response.raise_for_status()
-    emotions = response.json()["emotionPredictions"][0]["emotion"]
+    formatted_response = json.loads(response.text)
+    emotions = formatted_response["emotionPredictions"][0]["emotion"]
+
+    anger_score = emotions["anger"]
+    disgust_score = emotions["disgust"]
+    fear_score = emotions["fear"]
+    joy_score = emotions["joy"]
+    sadness_score = emotions["sadness"]
+
+    scores = {
+        "anger": anger_score,
+        "disgust": disgust_score,
+        "fear": fear_score,
+        "joy": joy_score,
+        "sadness": sadness_score,
+    }
+    dominant_emotion = max(scores, key=scores.get)
 
     return {
-        "anger": emotions["anger"],
-        "disgust": emotions["disgust"],
-        "fear": emotions["fear"],
-        "joy": emotions["joy"],
-        "sadness": emotions["sadness"],
-        "dominant_emotion": max(emotions, key=emotions.get),
+        "anger": anger_score,
+        "disgust": disgust_score,
+        "fear": fear_score,
+        "joy": joy_score,
+        "sadness": sadness_score,
+        "dominant_emotion": dominant_emotion,
     }
