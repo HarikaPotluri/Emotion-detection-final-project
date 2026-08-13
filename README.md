@@ -1,6 +1,8 @@
-# Emotion Detection Web Application
+# Final Project: Emotion Detection Web Application
 
-Final project for developing and deploying an AI-based web application with Python, IBM Watson NLP, Flask, unit testing, error handling, and static code analysis.
+**Project Name:** Final Project
+
+Final Project for developing and deploying an AI-based web application with Python, IBM Watson NLP, Flask, unit testing, error handling, and static code analysis.
 
 ## Author
 
@@ -9,7 +11,7 @@ Harika Potluri
 ## Project structure
 
 ```text
-emotion_detection_final_project/
+oaqjp-final-project-emb-ai/
 ├── EmotionDetection/
 │   ├── __init__.py
 │   └── emotion_detection.py
